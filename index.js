@@ -61,7 +61,7 @@ class Projectile {
     }
 }
 
-const ENEM_VELOCITY = 10
+const ENEM_VELOCITY = 5
 class Enemy {
     constructor(x, y, radius, color, velocity) {
         this.x = x
@@ -114,8 +114,8 @@ class Particle {
         this.draw()
         this.velocity.x *= friction
         this.velocity.y *= friction
-        this.x = this.x + this.velocity.x * ENEM_VELOCITY
-        this.y = this.y + this.velocity.y * ENEM_VELOCITY
+        this.x = this.x + this.velocity.x
+        this.y = this.y + this.velocity.y
         this.alpha -= 0.01
     }
 }
@@ -138,11 +138,13 @@ function init() {
     modalScoreEl.innerHTML = score
 }
 
-const ENEM_PER_SECONDS = 1
+const ENEM_PER_SECONDS = 10
 const SPAWN_TIMEOUT = 1000 / ENEM_PER_SECONDS
+let intervalId
+
 
 function spawnEnemies() {
-    setInterval(() => {
+    intervalId = setInterval(() => {
         let color = `hsl(${Math.random() * 360}, 50%, 50%`
         let radius = Math.random() * (40 - 15) + 15
         let x
@@ -221,6 +223,7 @@ function animate() {
                 cancelAnimationFrame(animationId)
                 modalEL.style.display = 'flex'
                 modalScoreEl.innerHTML = score
+                clearInterval(intervalId)
             }, 0);
         }
 
@@ -272,15 +275,13 @@ function animate() {
             })
     })
 
-
-
     player.draw()
 }
 
 /**
  * controler
  */
-addEventListener("click", (event) => {
+addEventListener("mousemove", (event) => {
     const angle = Math.atan2(
         event.clientY - centerY,
         event.clientX - centerX
